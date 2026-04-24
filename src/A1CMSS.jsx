@@ -31,12 +31,7 @@ const DC_STEPS = [
   { n: 4, title: "Final Handover", desc: "A spotless, move-in ready office handed over to you — right on time." },
 ];
 
-const DC_CARDS = [
-  { title: "Newly Built Offices", desc: "Fresh construction leaves dust and grime everywhere. We make it completely clean before you move in.", icon: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" },
-  { title: "Thorough & Safe", desc: "Professional-grade equipment and methods — safe for all surfaces, fixtures, and fittings.", icon: "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93C9.33 17.79 7 14.5 7 11V7.18L12 5z" },
-  { title: "Quick Turnaround", desc: "We work efficiently so your office is ready exactly when you need it — no delays.", icon: "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" },
-  { title: "Experienced Team", desc: "Our trained crew has handled 100+ commercial and office cleaning projects across Mumbai.", icon: "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" },
-];
+
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────
 function useWidth() {
