@@ -3,8 +3,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const FLIP_WORDS = ["Rentals", "Repairs", "Spare Parts"];
 
 const SLIDES = [
-  { tag: "Auto Scrubber", title: "Walk-Behind Auto Scrubber", desc: "Cleans, scrubs, and dries in a single pass — perfect for warehouses, hospitals, and shopping centres.", badges: ["sale", "rent"], img: "/images/WalkBehindAutoScrubber.jpg" },
-  { tag: "Auto Scrubber", title: "Ride-On Auto Scrubber", desc: "High-capacity model for large industrial spaces — reduces cleaning time with wide scrubbing paths.", badges: ["sale", "rent"], img: "/images/Scrubber-removebg-preview.png" },
+  { tag: "Auto Scrubber", title: "Walk-Behind Auto Scrubber", desc: "Cleans, scrubs, and dries in a single pass — perfect for warehouses, hospitals, and shopping centres.", badges: ["sale", "rent"], img: "/images/WalkBehindAutoScrubber_1.jpg" },
+  { tag: "Auto Scrubber", title: "Ride-On Auto Scrubber", desc: "High-capacity model for large industrial spaces — reduces cleaning time with wide scrubbing paths.", badges: ["sale", "rent"], img: "/images/WalkBehindAutoScrubber.jpg" },
   { tag: "Industrial Vacuum Cleaner", title: "Heavy-Duty Vacuum Cleaner", desc: "Handles fine dust, wet spills, and heavy debris — ideal for factories, construction sites, and workshops.", badges: ["sale", "rent", "parts"], img: "/images/HeavyDutyVaccumCleaner.jpg" },
   { tag: "Single Disk Machine", title: "Single Disk Floor Machine", desc: "For scrubbing, polishing, buffing, and stripping — works on tiles, marble, granite, and hard surfaces.", badges: ["sale", "rent", "parts"], img: "/images/SingleDiskFloorMachine.png" },
 ];
