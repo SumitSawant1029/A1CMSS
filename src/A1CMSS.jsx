@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const FLIP_WORDS = ["Rentals", "Deep Cleaning", "Repairs", "Spare Parts"];
+const FLIP_WORDS = ["Rentals", "Repairs", "Spare Parts"];
 
 const SLIDES = [
   { tag: "Auto Scrubber", title: "Walk-Behind Auto Scrubber", desc: "Cleans, scrubs, and dries in a single pass — perfect for warehouses, hospitals, and shopping centres.", badges: ["sale", "rent"], label: "Auto Scrubber — Photo 1" },
@@ -17,20 +17,18 @@ const SERVICES = [
   { title: "Maintenance & Repair", desc: "Professional on-site servicing and repair to maximise the life of your cleaning equipment.", icon: "M13.78 15.3 19.78 21.3 21.89 19.14 15.89 13.14 13.78 15.3M17.5 10C17.5 7 15.21 4.54 12.5 4.5V2L8.5 6 12.5 10V7.5C14.16 7.54 15.5 8.88 15.5 10.5 15.5 12.11 14.16 13.45 12.5 13.5 11.67 13.5 11 13.17 10.5 12.67L9.07 14.1C9.9 14.95 11.1 15.5 12.5 15.5C15.26 15.5 17.5 13.26 17.5 10.5V10M6.5 10C6.5 11.29 6.94 12.5 7.69 13.46L6.25 14.9C5.07 13.59 4.5 11.88 4.5 10C4.5 7 6.79 4.54 9.5 4.5V7C7.84 7.04 6.5 8.38 6.5 10Z" },
 ];
 
+const HOTELS = [
+  { name: "JW Marriott", sub: "Hotel", logo: "/images/jwmarriott-logo.png", initials: "JW" },
+  { name: "Ramada", sub: "Hotel", logo: "/images/ramada-logo.png", initials: "R" },
+  { name: "Sea Prince", sub: "Hotel", logo: "/images/seaprince-logo.png", initials: "SP" },
+];
+
 const WHY_ITEMS = [
   { title: "100+ Clients Served", desc: "Trusted by over 100 businesses — from warehouses to hospitals to newly built offices." },
   { title: "Sales & Rentals", desc: "Flexible options — buy outright or rent short/long-term based on your needs." },
   { title: "Genuine Spare Parts", desc: "Original spare parts for all machines we sell and service — fast availability." },
   { title: "All Industries Served", desc: "From warehouses, hospitals, hotels to factories and brand new offices — we serve them all." },
 ];
-
-const DC_STEPS = [
-  { n: 1, title: "Initial Assessment", desc: "We visit the office, understand the space size, and plan the cleaning scope." },
-  { n: 2, title: "Deep Dust & Debris Removal", desc: "Post-construction dust, debris, and material residue cleared using industrial vacuums." },
-  { n: 3, title: "Floor Scrubbing & Polishing", desc: "Auto scrubbers and single disk machines used to clean and polish all floor surfaces." },
-  { n: 4, title: "Final Handover", desc: "A spotless, move-in ready office handed over to you — right on time." },
-];
-
 
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────
@@ -89,64 +87,9 @@ function Tag({ type, dark }) {
   return <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, background: s.bg, color: s.color, whiteSpace: "nowrap" }}>{type === "sale" ? "For Sale" : type === "rent" ? "For Rent" : "Spare Parts"}</span>;
 }
 
-// ── Before / After Slider ─────────────────────────────────────────────────────
-function BeforeAfterSlider({ beforeSrc, afterSrc, beforeLabel = "Before", afterLabel = "After" }) {
-  const [pos, setPos] = useState(50);
-  const [dragging, setDragging] = useState(false);
-  const containerRef = useRef(null);
-
-  const updatePos = (clientX) => {
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    setPos((x / rect.width) * 100);
-  };
-
-  const onMouseDown = (e) => { e.preventDefault(); setDragging(true); };
-  const onMouseMove = useCallback((e) => { if (dragging) updatePos(e.clientX); }, [dragging]);
-  const onMouseUp = useCallback(() => setDragging(false), []);
-  const onTouchMove = (e) => updatePos(e.touches[0].clientX);
-
-  useEffect(() => {
-    if (dragging) {
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mouseup", onMouseUp);
-    }
-    return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    };
-  }, [dragging, onMouseMove, onMouseUp]);
-
-  const Placeholder = ({ label, color }) => (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, background: color }}>
-      <svg viewBox="0 0 24 24" style={{ width: 40, height: 40, fill: "rgba(255,255,255,0.35)" }}><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" /></svg>
-      <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", fontWeight: 500 }}>Upload {label} photo</span>
-    </div>
-  );
-
-  return (
-    <div ref={containerRef} onTouchMove={onTouchMove} onTouchEnd={onMouseUp}
-      style={{ position: "relative", width: "100%", height: 200, borderRadius: 14, overflow: "hidden", cursor: "ew-resize", userSelect: "none", border: "0.5px solid rgba(255,255,255,0.2)" }}>
-      <div style={{ position: "absolute", inset: 0 }}>
-        {afterSrc ? <img src={afterSrc} alt="After" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <Placeholder label="After" color="rgba(15,110,86,0.65)" />}
-      </div>
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
-        {beforeSrc ? <img src={beforeSrc} alt="Before" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <Placeholder label="Before" color="rgba(80,40,10,0.6)" />}
-      </div>
-      <div style={{ position: "absolute", top: 12, left: 14, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, letterSpacing: "0.5px", textTransform: "uppercase", backdropFilter: "blur(4px)" }}>{beforeLabel}</div>
-      <div style={{ position: "absolute", top: 12, right: 14, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, letterSpacing: "0.5px", textTransform: "uppercase", backdropFilter: "blur(4px)" }}>{afterLabel}</div>
-      <div style={{ position: "absolute", top: 0, bottom: 0, left: `${pos}%`, width: 2, background: "#fff", transform: "translateX(-50%)", pointerEvents: "none" }} />
-      <div onMouseDown={onMouseDown} style={{ position: "absolute", top: "50%", left: `${pos}%`, transform: "translate(-50%,-50%)", width: 42, height: 42, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "ew-resize", boxShadow: "0 2px 14px rgba(0,0,0,0.35)" }}>
-        <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, fill: "#0C447C" }}><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12zM8.59 7.41L10 6l6 6-6 6-1.41-1.41L13.17 12z"/></svg>
-      </div>
-      <div style={{ position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.45)", color: "#fff", fontSize: 11, padding: "4px 12px", borderRadius: 20, whiteSpace: "nowrap", backdropFilter: "blur(4px)", pointerEvents: "none" }}>← Drag to compare →</div>
-    </div>
-  );
-}
-
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   const [slide, setSlide] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const w = useWidth();
@@ -197,7 +140,7 @@ export default function App() {
           </div>
           {!mob && (
             <div style={{ display: "flex", gap: 24 }}>
-              {["Services", "Products", "Gallery", "Deep Cleaning", "Contact"].map(l => (
+              {["Services", "Products", "Gallery", "Contact"].map(l => (
                 <a key={l} href={`#${l.toLowerCase().replace(" ", "")}`} style={{ fontSize: 14, color: T.gray, fontWeight: 500 }}>{l}</a>
               ))}
             </div>
@@ -218,7 +161,7 @@ export default function App() {
         {/* Mobile drawer */}
         {mob && menuOpen && (
           <div style={{ position: "fixed", top: 64, left: 0, right: 0, zIndex: 99, background: T.nav, borderBottom: `0.5px solid ${T.border}`, padding: "8px 5% 16px", backdropFilter: "blur(10px)" }}>
-            {["Services", "Products", "Gallery", "Deep Cleaning", "Contact"].map(l => (
+            {["Services", "Products", "Gallery", "Contact"].map(l => (
               <a key={l} href={`#${l.toLowerCase().replace(" ", "")}`} onClick={() => setMenuOpen(false)} style={{ display: "block", fontSize: 15, color: T.text, fontWeight: 500, padding: "13px 0", borderBottom: `0.5px solid ${T.border}` }}>{l}</a>
             ))}
             <a href="#contact" onClick={() => setMenuOpen(false)} style={{ display: "block", marginTop: 14, background: dark ? "#2A5F8A" : T.blue, color: dark ? "#D0E8FF" : "#fff", padding: "12px 0", borderRadius: 8, fontSize: 15, fontWeight: 500, textAlign: "center" }}>Get a Quote</a>
@@ -232,7 +175,7 @@ export default function App() {
             <h1 style={{ ...T.serif, fontSize: mob ? 36 : 50, fontWeight: 700, lineHeight: 1.1, color: T.text, marginBottom: 16 }}>
               Trusted<br />for <FlipWord blue={T.blue} />
             </h1>
-            <p style={{ fontSize: 15, color: T.gray, lineHeight: 1.8, marginBottom: 26, fontWeight: 300 }}>Sales, service, spare parts &amp; deep cleaning — industrial vacuum cleaners, auto scrubbers and floor machines for businesses across Mumbai.</p>
+            <p style={{ fontSize: 15, color: T.gray, lineHeight: 1.8, marginBottom: 26, fontWeight: 300 }}>Sales, service &amp; spare parts — industrial vacuum cleaners, auto scrubbers and floor machines for businesses across Mumbai.</p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <a href="#products" style={{ background: dark ? "#2A5F8A" : T.blue, color: dark ? "#D0E8FF" : "#fff", padding: "11px 22px", borderRadius: 8, fontWeight: 500, fontSize: 14 }}>View Products</a>
               <a href="#contact" style={{ color: dark ? "#7BB8E8" : T.blue, border: `1.5px solid ${dark ? "rgba(91,159,212,0.5)" : T.blue}`, padding: "11px 22px", borderRadius: 8, fontWeight: 500, fontSize: 14 }}>Get in Touch</a>
@@ -261,7 +204,7 @@ export default function App() {
 
         {/* MILESTONE */}
         <div style={{ background: T.milestone, padding: "20px 5%", display: "flex", alignItems: "center", justifyContent: "center", gap: mob ? 16 : 0, flexWrap: "wrap", rowGap: 12 }}>
-          {[["100+", "Clients\nServed"], ["3+", "Machine\nCategories"], ["Sale", "Outright\nPurchase"], ["Rent", "Flexible\nRental"], ["Deep", "Office Deep\nCleaning"]].map(([num, lbl], i, arr) => (
+          {[["100+", "Clients\nServed"], ["3+", "Machine\nCategories"], ["Sale", "Outright\nPurchase"], ["Rent", "Flexible\nRental"]].map(([num, lbl], i, arr) => (
             <div key={num} style={{ display: "flex", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, padding: mob ? "0 10px" : "0 28px" }}>
                 <div style={{ ...T.serif, fontSize: mob ? 22 : 34, fontWeight: 700, color: "#fff" }}>{num}</div>
@@ -375,69 +318,6 @@ export default function App() {
           </Reveal>
         </section>
 
-        {/* DEEP CLEAN */}
-        <section id="deepcleaning" style={{ background: "linear-gradient(135deg,#0C447C,#085041)", padding: sp, color: "#fff" }}>
-
-          {/* Header — full width */}
-          <div style={{ textAlign: "center", marginBottom: mob ? 32 : 48 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, color: "#9FE1CB", marginBottom: 8 }}>New Service</div>
-            <div style={{ ...T.serif, fontSize: mob ? 28 : 38, fontWeight: 700, color: "#fff", marginBottom: 14 }}>Office Deep Cleaning</div>
-            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 15, lineHeight: 1.7, maxWidth: 580, margin: "0 auto" }}>We specialise in deep cleaning newly built and newly set-up offices — getting your space spotless, construction-dust free, and move-in ready before your team walks in on Day 1.</p>
-          </div>
-
-          {/* Body — steps left, sliders right */}
-          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1fr 1.6fr", gap: mob ? 32 : 48, alignItems: "start" }}>
-
-            {/* Left — steps + CTA */}
-            <div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 20, marginBottom: 32 }}>
-                {DC_STEPS.map(s => (
-                  <div key={s.n} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", ...T.serif, fontSize: 14, fontWeight: 700, color: "#fff", flexShrink: 0 }}>{s.n}</div>
-                    <div style={{ paddingTop: 6 }}>
-                      <h4 style={{ fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{s.title}</h4>
-                      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.65 }}>{s.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Feature pills */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
-                {["Newly Built Offices", "Thorough & Safe", "Quick Turnaround", "Experienced Team"].map(f => (
-                  <span key={f} style={{ fontSize: 12, fontWeight: 500, padding: "6px 14px", borderRadius: 20, background: "rgba(255,255,255,0.12)", border: "0.5px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }}>{f}</span>
-                ))}
-              </div>
-
-              <a href="#contact" style={{ display: "inline-block", background: "#fff", color: "#0C447C", padding: "12px 28px", borderRadius: 8, fontWeight: 600, fontSize: 15 }}>Book a Deep Clean</a>
-            </div>
-
-            {/* Right — 2x2 slider grid */}
-            <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>Before &amp; After Results</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                {[
-                  { before: null, after: null, label: "Office Floor" },
-                  { before: null, after: null, label: "Lobby Area" },
-                  { before: null, after: null, label: "Workspace" },
-                  { before: null, after: null, label: "Common Area" },
-                ].map((item, i) => (
-                  <div key={i} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <BeforeAfterSlider
-                      beforeSrc={item.before}
-                      afterSrc={item.after}
-                      beforeLabel="Before"
-                      afterLabel="After"
-                    />
-                    <div style={{ textAlign: "center", fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.55)", letterSpacing: "0.3px" }}>{item.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </section>
-
         {/* WHY US */}
         <section style={{ padding: sp }}>
           <Reveal><div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, color: T.teal, marginBottom: 8 }}>Why Choose Us</div></Reveal>
@@ -460,11 +340,50 @@ export default function App() {
           </div>
         </section>
 
+        {/* HOTELS */}
+        <section style={{ padding: sp, background: T.products, borderTop: `0.5px solid ${T.border}`, borderBottom: `0.5px solid ${T.border}` }}>
+          <Reveal><div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, color: T.teal, marginBottom: 8 }}>Our Clients</div></Reveal>
+          <Reveal delay={0.05}><div style={{ ...T.serif, fontSize: mob ? 26 : 34, fontWeight: 700, color: T.text, marginBottom: 10 }}>Trusted by Leading Hotels</div></Reveal>
+          <Reveal delay={0.1}><div style={{ fontSize: 15, color: T.gray, lineHeight: 1.8, maxWidth: 520, fontWeight: 300, marginBottom: 36 }}>Our machines keep some of Mumbai's finest hospitality spaces spotless every day.</div></Reveal>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "stretch", justifyContent: mob ? "center" : "flex-start" }}>
+            {HOTELS.map((h, i) => (
+              <Reveal key={h.name} delay={mob ? 0 : i * 0.08}>
+                <div style={{ background: T.card, border: `0.5px solid ${T.border}`, borderRadius: 16, padding: "24px 28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 14, minWidth: 160, width: mob ? 140 : 180 }}>
+                  <div style={{ width: 72, height: 72, borderRadius: 14, background: dark ? "#1E2228" : "#F0F4FA", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", border: `0.5px solid ${T.border}` }}>
+                    <img
+                      src={h.logo}
+                      alt={h.name}
+                      style={{ width: "100%", height: "100%", objectFit: "contain", padding: 8 }}
+                      onError={e => { e.currentTarget.style.display = "none"; e.currentTarget.nextSibling.style.display = "flex"; }}
+                    />
+                    <div style={{ display: "none", width: "100%", height: "100%", alignItems: "center", justifyContent: "center", ...T.serif, fontSize: 20, fontWeight: 700, color: dark ? "#7BB8E8" : T.blueDark }}>{h.initials}</div>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: T.text, lineHeight: 1.3 }}>{h.name}</div>
+                    <div style={{ fontSize: 12, color: T.muted, marginTop: 2 }}>{h.sub}</div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+            <Reveal delay={mob ? 0 : HOTELS.length * 0.08}>
+              <div style={{ background: T.card, border: `0.5px dashed ${T.border}`, borderRadius: 16, padding: "24px 28px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, minWidth: 160, width: mob ? 140 : 180 }}>
+                <div style={{ width: 72, height: 72, borderRadius: 14, background: dark ? "#1E2228" : "#F0F4FA", display: "flex", alignItems: "center", justifyContent: "center", border: `0.5px solid ${T.border}` }}>
+                  <svg viewBox="0 0 24 24" style={{ width: 28, height: 28, fill: T.muted }}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" /></svg>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: T.muted }}>& Many More</div>
+                  <div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>Across Mumbai</div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         {/* CONTACT */}
         <section id="contact" style={{ background: dark ? "#161B24" : T.blueDark, color: "#fff", textAlign: "center", padding: sp }}>
           <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, color: "#9FE1CB", marginBottom: 8 }}>Get In Touch</div>
           <div style={{ ...T.serif, fontSize: mob ? 26 : 32, fontWeight: 700, color: "#fff", marginBottom: 10 }}>Ready to Clean Smarter?</div>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, marginBottom: 32 }}>Contact us for sales, rentals, spare parts, servicing, or to book an office deep clean.</p>
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, marginBottom: 32 }}>Contact us for sales, rentals, spare parts, or servicing.</p>
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
             {[
               { label: "Phone", val: "+91 81085 76115", icon: "M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" },
